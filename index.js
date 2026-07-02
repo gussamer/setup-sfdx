@@ -19,7 +19,7 @@ function installSFDX(){
     core.info(stdout)
     if(core.getInput('sfdx-auth-url')) createAuthFile()
   })*/
-  exec('npm i -g @salesforce/cli@nightly', function(error, stdout, stderr){
+  exec('npm i -g @salesforce/cli', function(error, stdout, stderr){
     if(error) throw(stderr)
     core.info(stdout)
     if(core.getInput('sfdx-auth-url')) createAuthFile()
