@@ -33,7 +33,7 @@ function createAuthFile(){
 
 function authSFDX(){
   var params = '--setdefaultdevhubusername --setdefaultusername -a SFDX-ENV'
-  exec('/tmp/sfdx/bin/sfdx auth:sfdxurl:store -f /tmp/sfdx_auth.txt '+params, function(error, stdout, stderr){
+  exec('cat /tmp/sfdx_auth.txt | sf auth sfdxurl store --sfdx-url-stdin '+params, function(error, stdout, stderr){
     if(error) throw(stderr)
 	core.info(stdout)
   })
