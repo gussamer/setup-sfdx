@@ -19,7 +19,7 @@ function installSFDX(){
     core.info(stdout)
     if(core.getInput('sfdx-auth-url')) createAuthFile()
   })*/
-  exec('npm i -g @salesforce/cli@nightly', function(error, stdout, stderr){
+  exec('npm i -g @salesforce/cli', function(error, stdout, stderr){
     if(error) throw(stderr)
     core.info(stdout)
     if(core.getInput('sfdx-auth-url')) createAuthFile()
@@ -32,7 +32,7 @@ function createAuthFile(){
 }
 
 function authSFDX(){
-  var params = '--setdefaultdevhubusername --setdefaultusername -a SFDX-ENV'
+  var params = '--set-default-dev-hub --set-default -a SFDX-ENV'
   exec('cat /tmp/sfdx_auth.txt | sf auth sfdxurl store --sfdx-url-stdin '+params, function(error, stdout, stderr){
     if(error) throw(stderr)
 	core.info(stdout)
