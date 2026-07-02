@@ -1,0 +1,34 @@
+name: Test setup-sfdx-action Funtionality
+
+on:
+  push:
+  pull_request_target:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository 
+        uses: actions/checkout@v7 #Check out this repo
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}} 
+      - name: Install jq
+        uses: dcarbone/install-jq-action@v3
+        with:
+          version: '1.8.2' # Optional: defaults to latest stable
+          force: 'false'   # Optional: force re-install if already present
+      - name: Verify jq Installation
+        run: jq --version
+      - name: Install Salesforce CLI and authorize DevHub
+        uses: ./
+        with:
+          sfdx-auth-url: ${{ secrets.DEVHUB_SFDXURL }}
+      - name: Set Default Devhub
+        run: sf force config set --global target-dev-hub=SFDX-ENV #Even though the setup-sfdx action uses --setdefaultdevhubusername, it doesn't seem to stick since it uses --setdefaultusername so we brute force it here
+      - name: Check Auth Orgs
+        run: sf org list --json | jq '.result.devHubs | length > 0'
+        if: always()
