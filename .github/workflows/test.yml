@@ -30,5 +30,5 @@ jobs:
       - name: Set Default Devhub
         run: sf force config set --global target-dev-hub=SFDX-ENV #Even though the setup-sfdx action uses --setdefaultdevhubusername, it doesn't seem to stick since it uses --setdefaultusername so we brute force it here
       - name: Check Auth Orgs
-        run: sf org list --json | jq '.'
+        run: sf org list --json | jq '.result.devHubs'
         if: always()
