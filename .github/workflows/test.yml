@@ -15,16 +15,15 @@ jobs:
         uses: actions/checkout@v7 #Check out this repo
         with:
           ref: ${{github.event.pull_request.head.ref}}
-          repository: ${{github.event.pull_request.head.repo.full_name}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}  
+      - name: Install jq
+        run: apt install jq -y 
       - name: Install SFDX CLI and authorize DevHub
-        uses: ./ #We're using a fork of https://github.com/sfdx-actions/setup-sfdx for safety
+        uses: ./
         with:
           sfdx-auth-url: ${{ secrets.DEVHUB_SFDXURL }}
-      - run: sf force config set --global target-dev-hub=SFDX-ENV #Even though the setup-sfdx action uses --setdefaultdevhubusername, it doesn't seem to stick since it uses --setdefaultusername so we brute force it here
-      #- run: sf force org create -f ./config/project-scratch-def.json --setdefaultusername -d 1
-      #- run: sf force source push
-      #- run: sf force apex test run -w 5
-      #git clone fflib sample
+      - name: Set Default Devhub
+        run: sf force config set --global target-dev-hub=SFDX-ENV #Even though the setup-sfdx action uses --setdefaultdevhubusername, it doesn't seem to stick since it uses --setdefaultusername so we brute force it here
       - name: Check Auth Orgs
-        run: sf org list --json
+        run: sf org list --json | jq 'result.devHubs.length > 0'
         if: always()
